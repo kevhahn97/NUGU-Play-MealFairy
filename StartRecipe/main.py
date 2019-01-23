@@ -32,9 +32,15 @@ class Response:
             header = {
                 'Authorization': 'Bearer ' + at
             }
+            try:
+                HTTPresponse = HTTPrequest.get(url, headers = header)
+                self.set_parameters({
+                    'ID': HTTPresponse.json()['id']
+                    })
+            except:
+                print('Login failed. Maybe AT expired.')
+                self.res['resultCode'] = 'LoginFailed'
 
-            HTTPresponse = HTTPrequest.get(url, headers = header)
-            self.set_parameters({'ID': HTTPresponse.json()['id']})
 
     def get_food_status(self, req):
         if req['action']['parameters'].get('food') == None:
@@ -48,15 +54,46 @@ class Response:
             conn = pymysql.connect(host = rds_host, user = name, passwd=password, db = db_name, charset='utf8')
             cur = conn.cursor()
 
-            if ptype_food == 'FOOD':    
-                sql = 'select * from user where food = "' + p_food + '"'
-                cur.execute(sql)
-                rows = cur.fetchone()
+            if ptype_food == 'FOOD':
+                try:
+                    sql = 'select * from food where food = %s'
+                    cur.execute(sql, (p_food, ))
+                    rows = cur.fetchall()
+                    if len(rows) == 0:
+                        self.set_parameters({
+                            'status': 'notready',
+                            'foodList': 'null'
+                        })
+                    else:
+                        self.set_parameters({
+                            'status': 'food',
+                            'foodList': 'null'
+                        })
+                except:
+                    print('DB Error')
+                    self.res['resultCode'] = 'DBerror'
                 
             elif ptype_food == 'FOODGROUP':
-                sql = 'select * from user where foodgroup = "' + p_food + '"'
-                cur.execute(sql)
-                rows = cur.fetchone()
+                try:
+                    sql = 'select * from food where foodgroup = %s'
+                    cur.execute(sql, (p_food, ))
+                    rows = cur.fetchall()
+
+                    foodList = []
+                    foodListStr = ''
+
+                    for food in rows:
+                        foodList.append(food[0])
+
+                    foodListStr = ', '.join(foodList)
+
+                    self.set_parameters({
+                        'status': 'foodgroup',
+                        'foodList': foodListStr
+                    })
+                except:
+                    print('DB Error')
+                    self.res['resultCode'] = 'DBerror'
 
             conn.close()
 
@@ -69,6 +106,6 @@ class Response:
            
 def main(args, event):
     response = Response(args)
-    response.get_food_status(args)
     response.get_ID(args)
+    response.get_food_status(args)
     return response.res
