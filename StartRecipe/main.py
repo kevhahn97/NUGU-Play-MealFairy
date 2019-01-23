@@ -97,12 +97,6 @@ class Response:
 
             conn.close()
 
-        self.set_parameters({
-            'status': 'food',
-            'foodList': 'null'
-        })
-
-
 def main(args, event):
     response = Response(args)
     response.get_ID(args)
