@@ -192,3 +192,6 @@ dmypy.json
 # for AWS uploads
 upload*
 upload*/
+
+# My Block Test files
+blocktest*
