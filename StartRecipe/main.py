@@ -2,10 +2,11 @@ import pymysql
 import requests as HTTPrequest
 import credentials
 
-rds_host    = credentials.rds_host
-name        = credentials.name    
-password    = credentials.password
-db_name     = credentials.db_name 
+rds_host = credentials.rds_host
+name = credentials.name
+password = credentials.password
+db_name = credentials.db_name
+
 
 class Response:
     def __init__(self, req):
@@ -26,21 +27,20 @@ class Response:
             self.set_parameters({'ID': 'null'})
         else:
             at = req['context']['session']['accessToken']
-            
+
             #send GET HTTP request
             url = 'https://www.googleapis.com/oauth2/v2/userinfo'
             header = {
                 'Authorization': 'Bearer ' + at
             }
             try:
-                HTTPresponse = HTTPrequest.get(url, headers = header)
+                HTTPresponse = HTTPrequest.get(url, headers=header)
                 self.set_parameters({
                     'ID': HTTPresponse.json()['id']
-                    })
+                })
             except:
                 print('Login failed. Maybe AT expired.')
                 self.res['resultCode'] = 'LoginFailed'
-
 
     def get_food_status(self, req):
         if req['action']['parameters'].get('food') == None:
@@ -51,7 +51,8 @@ class Response:
         else:
             p_food = req['action']['parameters']['food']['value']
             ptype_food = req['action']['parameters']['food']['type']
-            conn = pymysql.connect(host = rds_host, user = name, passwd=password, db = db_name, charset='utf8')
+            conn = pymysql.connect(
+                host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
             cur = conn.cursor()
 
             if ptype_food == 'FOOD':
@@ -72,7 +73,7 @@ class Response:
                 except:
                     print('DB Error')
                     self.res['resultCode'] = 'DBerror'
-                
+
             elif ptype_food == 'FOODGROUP':
                 try:
                     sql = 'select * from food where foodgroup = %s'
@@ -97,13 +98,12 @@ class Response:
 
             conn.close()
 
-
         self.set_parameters({
             'status': 'food',
             'foodList': 'null'
-            })
+        })
 
-           
+
 def main(args, event):
     response = Response(args)
     response.get_ID(args)
