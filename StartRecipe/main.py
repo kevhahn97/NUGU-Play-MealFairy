@@ -16,7 +16,7 @@ class Response:
         # set your optional utterance parameters to response
         if req['action']['parameters'].get('food') != None:
             self.set_parameters(
-                {'gu': req['action']['parameters']['food']['value']})
+                {'food': req['action']['parameters']['food']['value']})
 
     def set_parameters(self, key_values):
         self.res['output'].update(key_values)
