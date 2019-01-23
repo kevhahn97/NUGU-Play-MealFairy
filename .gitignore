@@ -188,3 +188,7 @@ dmypy.json
 .venv/
 
 # End of https://www.gitignore.io/api/python
+
+# for AWS uploads
+upload*
+upload*/
