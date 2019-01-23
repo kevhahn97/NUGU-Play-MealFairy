@@ -7,7 +7,6 @@ name = credentials.name
 password = credentials.password
 db_name = credentials.db_name
 
-
 class Response:
     def __init__(self, req):
         self.res = {'version': req['version']}
