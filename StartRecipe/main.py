@@ -58,7 +58,7 @@ class Response:
                     conn = pymysql.connect(
                     host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
                     cur = conn.cursor()
-                    sql = 'select * from food where replace(food, ' ','') = %s'
+                    sql = """select * from food where replace(food, ' ','') = %s"""
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchone()
                     if rows == None:
@@ -80,7 +80,7 @@ class Response:
                     conn = pymysql.connect(
                     host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
                     cur = conn.cursor()
-                    sql = 'select * from food where replace(foodgroup, ' ','') = %s order by likes desc'
+                    sql = """select * from food where replace(foodgroup, ' ','') = %s order by likes desc"""
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchall()
 
