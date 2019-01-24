@@ -45,6 +45,8 @@ class Response:
             print('DB close error')
 
 def main(args, event):
+    print(args)
     response = Response(args)
     response.get_recipe(args)
+    print(response.res)
     return response.res

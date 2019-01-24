@@ -105,7 +105,9 @@ class Response:
                 print('DB close error')
 
 def main(args, event):
+    print(args)
     response = Response(args)
     response.get_ID(args)
     response.get_food_status(args)
+    print(response.res)
     return response.res
