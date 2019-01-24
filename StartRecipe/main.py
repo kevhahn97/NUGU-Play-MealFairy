@@ -58,8 +58,8 @@ class Response:
                 try:
                     sql = 'select * from food where food = %s'
                     cur.execute(sql, (p_food, ))
-                    rows = cur.fetchall()
-                    if len(rows) == 0:
+                    rows = cur.fetchone()
+                    if rows == None:
                         self.set_parameters({
                             'status': 'notready',
                             'foodList': 'null'
