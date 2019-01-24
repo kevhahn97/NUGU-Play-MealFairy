@@ -26,9 +26,9 @@ class Response:
         p_food = req['action']['parameters']['food']['value']
         p_food = p_food.replace(' ', '')
         
-        conn = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
-        cur = conn.cursor()
         try:
+            conn = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
+            cur = conn.cursor()
             sql = """select recipe from food join recipe_atonce on food.food = recipe_atonce.food where replace(food.food, ' ', '') = %s"""
             cur.execute(sql, (p_food, ))
             rows = cur.fetchone()
@@ -38,6 +38,11 @@ class Response:
         except:
             print('DB Error')
             self.res['resultCode'] = 'DBerror'
+            
+        try:
+            conn.close()
+        except:
+            print('DB close error')
 
 def main(args, event):
     response = Response(args)

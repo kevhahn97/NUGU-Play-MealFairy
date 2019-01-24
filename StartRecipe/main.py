@@ -7,6 +7,7 @@ name = credentials.name
 password = credentials.password
 db_name = credentials.db_name
 
+
 class Response:
     def __init__(self, req):
         self.res = {'version': req['version']}
@@ -49,14 +50,14 @@ class Response:
             })
         else:
             p_food = req['action']['parameters']['food']['value']
-            p_food = p_food.replace(' ','')
+            p_food = p_food.replace(' ', '')
             ptype_food = req['action']['parameters']['food']['type']
-            conn = pymysql.connect(
-                host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
-            cur = conn.cursor()
 
             if ptype_food == 'FOOD':
                 try:
+                    conn = pymysql.connect(
+                    host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
+                    cur = conn.cursor()
                     sql = 'select * from food where replace(food, ' ','') = %s'
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchone()
@@ -76,6 +77,9 @@ class Response:
 
             elif ptype_food == 'FOODGROUP':
                 try:
+                    conn = pymysql.connect(
+                    host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
+                    cur = conn.cursor()
                     sql = 'select * from food where replace(foodgroup, ' ','') = %s order by likes desc'
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchall()
@@ -95,8 +99,10 @@ class Response:
                 except:
                     print('DB Error')
                     self.res['resultCode'] = 'DBerror'
-
-            conn.close()
+            try:
+                conn.close()
+            except:
+                print('DB close error')
 
 def main(args, event):
     response = Response(args)
