@@ -15,7 +15,8 @@ class Response:
         self.set_parameters({
             'food': req['action']['parameters']['food']['value'],
             'foodList': req['action']['parameters']['foodList']['value'],
-            'status': req['action']['parameters']['status']['value']
+            'status': req['action']['parameters']['status']['value'],
+            'ID': req['action']['parameters']['ID']['value']
         })
 
     def set_parameters(self, key_values):
@@ -23,10 +24,12 @@ class Response:
 
     def get_recipe(self, req):
         p_food = req['action']['parameters']['food']['value']
+        p_food = p_food.replace(' ', '')
+        
         conn = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
         cur = conn.cursor()
         try:
-            sql = 'select recipe from food join recipe_atonce on food.food = recipe_atonce.food where food.food = %s'
+            sql = """select recipe from food join recipe_atonce on food.food = recipe_atonce.food where replace(food.food, ' ', '') = %s"""
             cur.execute(sql, (p_food, ))
             rows = cur.fetchone()
             self.set_parameters({

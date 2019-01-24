@@ -49,6 +49,7 @@ class Response:
             })
         else:
             p_food = req['action']['parameters']['food']['value']
+            p_food = p_food.replace(' ','')
             ptype_food = req['action']['parameters']['food']['type']
             conn = pymysql.connect(
                 host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
@@ -56,7 +57,7 @@ class Response:
 
             if ptype_food == 'FOOD':
                 try:
-                    sql = 'select * from food where food = %s'
+                    sql = 'select * from food where replace(food, ' ','') = %s'
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchone()
                     if rows == None:
@@ -75,7 +76,7 @@ class Response:
 
             elif ptype_food == 'FOODGROUP':
                 try:
-                    sql = 'select * from food where foodgroup = %s'
+                    sql = 'select * from food where replace(foodgroup, ' ','') = %s order by likes desc'
                     cur.execute(sql, (p_food, ))
                     rows = cur.fetchall()
 
