@@ -27,13 +27,16 @@ class Response:
         p_food = p_food.replace(' ', '')
         
         try:
-            conn = pymysql.connect(host=rds_host, user=name, passwd=password, db=db_name, charset='utf8')
+            conn = pymysql.connect(
+                host=rds_host, user=name, passwd=password, db=db_name, 
+                charset='utf8', cursorclass=pymysql.cursors.DictCursor)
             cur = conn.cursor()
-            sql = """select recipe from food join recipe_atonce on food.food = recipe_atonce.food where replace(food.food, ' ', '') = %s"""
+            sql = """select * from food join recipe_atonce on food.food = recipe_atonce.food where replace(food.food, ' ', '') = %s"""
             cur.execute(sql, (p_food, ))
             rows = cur.fetchone()
+            res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe']
             self.set_parameters({
-                'SR_F_AO_response': rows[0]
+                'SR_F_AO_response': res
             })
         except:
             print('DB Error')
