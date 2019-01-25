@@ -46,7 +46,7 @@ class Response:
                 cur.execute(sql_replace, (ID, rows['food'], rows['len']))
                 conn.commit()
 
-                res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe']
+                res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe'] + '이제 집밥 요정에서 다음 단계를 알려달라고 하시거나 다시 알려달라고 하실 수 있어요.'
                 self.set_parameters({
                     'SR_FG_FS_F_OBO_response': res
                 })
