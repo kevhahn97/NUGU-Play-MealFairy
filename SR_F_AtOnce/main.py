@@ -38,11 +38,8 @@ class Response:
         except:
             print('DB Error')
             self.res['resultCode'] = 'DBerror'
-            
-        try:
+        finally:
             conn.close()
-        except:
-            print('DB close error')
 
 def main(args, event):
     print(args)

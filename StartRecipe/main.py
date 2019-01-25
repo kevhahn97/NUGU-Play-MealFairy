@@ -74,6 +74,8 @@ class Response:
                 except:
                     print('DB Error')
                     self.res['resultCode'] = 'DBerror'
+                finally:
+                    conn.close()
 
             elif ptype_food == 'FOODGROUP':
                 try:
@@ -99,10 +101,8 @@ class Response:
                 except:
                     print('DB Error')
                     self.res['resultCode'] = 'DBerror'
-            try:
-                conn.close()
-            except:
-                print('DB close error')
+                finally:
+                    conn.close()
 
 def main(args, event):
     print(args)
