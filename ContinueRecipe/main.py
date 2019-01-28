@@ -7,6 +7,11 @@ name = credentials.name
 password = credentials.password
 db_name = credentials.db_name
 
+def get_sequence(seq):
+    return {
+        1: '첫', 2: '두', 3: '세', 4: '네', 5: '다섯', 6: '여섯', 7:'일곱', 8:'여덟', 9:'아홉',10:'열', 11:'열한', 12:'열두', 13:'열세', 14:'열네',15:'열다섯', 16:'열여섯'
+    }.get(seq)
+
 class Response:
     def __init__(self, req):
         self.res = {'version': req['version']}
@@ -50,7 +55,7 @@ class Response:
                     host=rds_host, user=name, passwd=password, db=db_name, 
                     charset='utf8', cursorclass=pymysql.cursors.DictCursor)
                 cur = conn.cursor()
-                sql = """select user.food, recipe from user join recipe_onebyone on user.food = recipe_onebyone.food and user.cur+1 = recipe_onebyone.seq where id = %s and cur < len"""
+                sql = """select user.food, recipe, seq from user join recipe_onebyone on user.food = recipe_onebyone.food and user.cur+1 = recipe_onebyone.seq where id = %s and cur < len"""
                 cur.execute(sql, (ID, ))
                 rows = cur.fetchone()
                 if rows == None:
@@ -58,7 +63,7 @@ class Response:
                         'CR_response': '현재 진행 중인 요리가 없습니다. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요.'
                     })
                 else:
-                    res = rows['food'] + '의 다음 단계입니다. ' + rows['recipe']
+                    res = rows['food'] + '의 ' + get_sequence(rows['seq']) + '번째 단계입니다. ' + rows['recipe']
                     self.set_parameters({
                         'CR_response': res
                     })
