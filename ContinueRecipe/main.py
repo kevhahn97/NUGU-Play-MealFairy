@@ -63,7 +63,7 @@ class Response:
                         'CR_response': '현재 진행 중인 요리가 없습니다. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요.'
                     })
                 else:
-                    res = rows['food'] + '의 ' + get_sequence(rows['seq']) + '번째 단계입니다. ' + rows['recipe']
+                    res = rows['food'] + '의 ' + get_sequence(rows['seq']) + ' 번째 단계입니다. ' + rows['recipe']
                     self.set_parameters({
                         'CR_response': res
                     })
