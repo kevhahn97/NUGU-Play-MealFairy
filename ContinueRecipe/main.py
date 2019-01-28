@@ -13,11 +13,6 @@ class Response:
         self.res['resultCode'] = 'OK'
         self.res['output'] = {}
 
-        # set your optional utterance parameters to response
-        if req['action']['parameters'].get('food') != None:
-            self.set_parameters(
-                {'food': req['action']['parameters']['food']['value']})
-
     def set_parameters(self, key_values):
         self.res['output'].update(key_values)
 
@@ -69,7 +64,7 @@ class Response:
                     })
                     sql = """update user set cur = cur + 1 where id = %s"""
                     cur.execute(sql, (ID, ))
-                    cur.commit()
+                    conn.commit()
             except:
                 print('DB Error')
                 self.res['resultCode'] = 'DBerror'
