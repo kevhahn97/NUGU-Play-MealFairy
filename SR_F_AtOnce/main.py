@@ -15,6 +15,7 @@ class Response:
         self.set_parameters({
             'food': req['action']['parameters']['food']['value'],
             'foodList': req['action']['parameters']['foodList']['value'],
+            'foodList1': req['action']['parameters']['foodList1']['value'],
             'status': req['action']['parameters']['status']['value'],
             'ID': req['action']['parameters']['ID']['value']
         })

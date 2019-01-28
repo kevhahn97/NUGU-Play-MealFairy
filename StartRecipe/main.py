@@ -7,7 +7,6 @@ name = credentials.name
 password = credentials.password
 db_name = credentials.db_name
 
-
 class Response:
     def __init__(self, req):
         self.res = {'version': req['version']}
@@ -46,7 +45,8 @@ class Response:
         if req['action']['parameters'].get('food') == None:
             self.set_parameters({
                 'status': 'nofood',
-                'foodList': 'null'
+                'foodList': 'null',
+                'foodList1': 'null'
             })
         else:
             p_food = req['action']['parameters']['food']['value']
@@ -64,12 +64,14 @@ class Response:
                     if rows == None:
                         self.set_parameters({
                             'status': 'notready',
-                            'foodList': 'null'
+                            'foodList': 'null',
+                            'foodList1': 'null'
                         })
                     else:
                         self.set_parameters({
                             'status': 'food',
-                            'foodList': 'null'
+                            'foodList': 'null',
+                            'foodList1': 'null'
                         })
                 except:
                     print('DB Error')
@@ -96,7 +98,8 @@ class Response:
 
                     self.set_parameters({
                         'status': 'foodgroup',
-                        'foodList': foodListStr
+                        'foodList': foodListStr,
+                        'foodList1': rows[0][0]
                     })
                 except:
                     print('DB Error')
