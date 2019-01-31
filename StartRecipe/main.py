@@ -94,7 +94,7 @@ class Response:
                     for food in rows:
                         foodList.append(food[0])
 
-                    foodListStr = ', '.join(foodList)
+                    foodListStr = '. '.join(foodList)
 
                     self.set_parameters({
                         'status': 'foodgroup',
