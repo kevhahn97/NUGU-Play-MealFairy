@@ -12,6 +12,7 @@ class Response:
         self.res = {'version': req['version']}
         self.res['resultCode'] = 'OK'
         self.res['output'] = {}
+        self.res['directives'] = []
 
     def set_parameters(self, key_values):
         self.res['output'].update(key_values)
