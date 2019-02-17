@@ -2,11 +2,6 @@ import pymysql
 import requests as HTTPrequest
 import credentials
 
-def get_sequence(seq):
-    return {
-        1: '첫', 2: '두', 3: '세', 4: '네', 5: '다섯', 6: '여섯', 7:'일곱', 8:'여덟', 9:'아홉',10:'열', 11:'열한', 12:'열두', 13:'열세', 14:'열네',15:'열다섯', 16:'열여섯'
-    }.get(seq)
-
 rds_host = credentials.rds_host
 name = credentials.name
 password = credentials.password
@@ -20,6 +15,24 @@ class Response:
 
     def set_parameters(self, key_values):
         self.res['output'].update(key_values)
+
+    def set_active_timer(self, time, food, seq):
+        offset = (469 - time) * 1000
+        token = food + '_' + str(seq)
+        e_token = food + '_' + str(seq-1)
+        directive = {
+            "type": "AudioPlayer.Play",
+            "audioItem": {     
+                "stream": {
+                    "url": "https://s3.ap-northeast-2.amazonaws.com/mealfairy/music/mozart+sonata+for+two+piano.m4a",
+                    "offsetInMilliseconds": offset,
+                    "progressReport": {},
+                    "token": token,
+                    "expectedPreviousToken": e_token
+                }
+            }
+        }
+        self.res['directives'].append(directive)
 
     def get_ID(self, req):
         if req['context']['session'].get('accessToken') == None:
@@ -55,7 +68,7 @@ class Response:
                     host=rds_host, user=name, passwd=password, db=db_name, 
                     charset='utf8', cursorclass=pymysql.cursors.DictCursor)
                 cur = conn.cursor()
-                sql = """select user.food, recipe, seq from user join recipe_onebyone on user.food = recipe_onebyone.food and user.cur = recipe_onebyone.seq where id = %s"""
+                sql = """select user.food, recipe, seq, timer from user join recipe_onebyone on user.food = recipe_onebyone.food and user.cur = recipe_onebyone.seq where id = %s"""
                 cur.execute(sql, (ID, ))
                 rows = cur.fetchone()
                 if rows == None:
@@ -63,10 +76,11 @@ class Response:
                         'AR_response': '현재 진행 중인 요리가 없습니다. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요.'
                     })
                 else:
-                    res = rows['food'] + '의 ' + get_sequence(rows['seq']) + ' 번째 단계입니다. ' + rows['recipe']
                     self.set_parameters({
-                        'AR_response': res
+                        'AR_response': rows['recipe']
                     })
+                    if rows['timer'] != None:
+                        self.set_active_timer(rows['timer'], rows['food'], rows['seq'])
             except:
                 print('DB Error')
                 self.res['resultCode'] = 'DBerror'
