@@ -19,8 +19,8 @@ class Response:
 
     def set_active_timer(self, time, food, seq):
         offset = (469 - time) * 1000
-        token = food + '_' + str(seq)
-        e_token = food + '_' + str(seq-1)
+        token = 'mf_' + food + '_' + str(seq)
+        e_token = 'mf_' + food + '_' + str(seq-1)
         directive = {
             "type": "AudioPlayer.Play",
             "audioItem": {     

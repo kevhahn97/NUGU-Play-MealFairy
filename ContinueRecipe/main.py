@@ -16,11 +16,17 @@ class Response:
 
     def set_parameters(self, key_values):
         self.res['output'].update(key_values)
+    
+    def set_audio_stop(self):
+        directive = {
+            "type": "AudioPlayer.Stop"
+        }
+        self.res['directives'].append(directive)
 
     def set_active_timer(self, time, food, seq):
         offset = (469 - time) * 1000
-        token = food + '_' + str(seq)
-        e_token = food + '_' + str(seq-1)
+        token = 'mf_' + food + '_' + str(seq)
+        e_token = 'mf_' + food + '_' + str(seq-1)
         directive = {
             "type": "AudioPlayer.Play",
             "audioItem": {     
@@ -85,6 +91,10 @@ class Response:
                     conn.commit()
                     if rows['timer'] != None:
                         self.set_active_timer(rows['timer'], rows['food'], rows['seq'])
+                    elif req['context'].get('supportedInterfaces') != None:
+                        token = req['context']['supportedInterfaces']['AudioPlayer']['token']
+                        if req['context']['supportedInterfaces']['AudioPlayer']['playerActivity'] == 'PLAYING' and token[:2] == 'mf':
+                            self.set_audio_stop()
             except:
                 print('DB Error')
                 self.res['resultCode'] = 'DBerror'
