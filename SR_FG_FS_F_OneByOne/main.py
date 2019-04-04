@@ -45,6 +45,8 @@ class Response:
 
                 sql_replace = """replace user values (%s, %s, %s, 1);"""
                 cur.execute(sql_replace, (ID, rows['food'], rows['len']))
+                sql_replace = """insert into food_logs values(%s, default, 1, %s)"""
+                cur.execute(sql, (ID, rows['food']))
                 conn.commit()
 
                 res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe'] + "이제, 집밥 요정에서 다음. 혹은, 집밥 요정에서 다시. 와 같이 말씀해 주세요."
@@ -60,6 +62,6 @@ class Response:
 def main(args, event):
     print('HTTP request', args)
     response = Response(args)
-    ID = response.make_response(args)
+    response.make_response(args)
     print('HTTP request', response.res)
     return response.res
