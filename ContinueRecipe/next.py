@@ -142,7 +142,7 @@ class Response:
                     "offsetInMilliseconds": 0,
                     "progressReport": {},
                     "token": token,
-                    "expectedPreviousToken": token
+                    "expectedPreviousToken": token + 'e'
                 }
             }
         }
@@ -158,7 +158,7 @@ class Response:
                     "offsetInMilliseconds": 0,
                     "progressReport": {},
                     "token": token,
-                    "expectedPreviousToken": token
+                    "expectedPreviousToken": token + 'e'
                 }
             }
         }
@@ -186,11 +186,11 @@ class Response:
     def make_response(self, req, ID):
         if ID == 'null':
             self.set_parameters({
-                'CR_response': '한 단계씩 도와드리는 기능은 계정을 연동하셔야 사용하실 수 있어요. 누구 앱 좌측 메뉴에서 집밥 요정 Play를 찾아 계정을 연동해 주세요. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요'
+                'CR_response_B': '한 단계씩 도와드리는 기능은 계정을 연동하셔야 사용하실 수 있어요. 누구 앱 좌측 메뉴에서 집밥 요정 Play를 찾아 계정을 연동해 주세요. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요'
             })
         elif ID == 'expired':
             self.set_parameters({
-                'CR_response': '죄송합니다. 계정 정보를 가져오는 과정에서 오류가 발생했어요. 잠시 후에 다시 시도해 주세요.'
+                'CR_response_B': '죄송합니다. 계정 정보를 가져오는 과정에서 오류가 발생했어요. 잠시 후에 다시 시도해 주세요.'
             })
         else:
             try:
@@ -206,7 +206,7 @@ class Response:
                 rows = cur.fetchone()
                 if rows == None:
                     self.set_parameters({
-                        'CR_response': '현재 진행 중인 요리가 없습니다. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요.'
+                        'CR_response_B': '현재 진행 중인 요리가 없습니다. 집밥 요정에 익숙하지 않으시다면 도움말 들려줘. 라고 말씀해 보세요.'
                     })
                 else:
                     crresponse = rows['recipe']
@@ -234,7 +234,7 @@ class Response:
                         if req['context']['supportedInterfaces']['AudioPlayer']['playerActivity'] == 'PLAYING' and token[:2] == 'mf':
                             self.set_audio_stop()
                     self.set_parameters({
-                        'CR_response': crresponse
+                        'CR_response_B': crresponse
                     })
             except Exception as e:
                 print('DB Error', e)
