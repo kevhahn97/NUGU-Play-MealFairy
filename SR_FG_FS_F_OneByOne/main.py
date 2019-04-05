@@ -46,15 +46,15 @@ class Response:
                 sql_replace = """replace user values (%s, %s, %s, 1);"""
                 cur.execute(sql_replace, (ID, rows['food'], rows['len']))
                 sql_replace = """insert into food_logs values(%s, default, 1, %s)"""
-                cur.execute(sql, (ID, rows['food']))
+                cur.execute(sql_replace, (ID, rows['food']))
                 conn.commit()
 
-                res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe'] + "이제, 집밥 요정에서 다음. 혹은, 집밥 요정에서 다시. 와 같이 말씀해 주세요."
+                res = rows['food'] + ' ' + str(rows['people']) + '인분 기준으로 예상 조리 시간은 ' + str(rows['time']) + '분입니다. ' + rows['recipe'] + "이제, 집밥 요정에서 다음. 혹은, 집밥 요정에서 한번 더. 와 같이 말씀해 주세요."
                 self.set_parameters({
                     'SR_FG_FS_F_OBO_response': res
                 })
-            except:
-                print('DB Error')
+            except Exception as e:
+                print('DB Error', e)
                 self.res['resultCode'] = 'DBerror'
             finally:
                 conn.close()
