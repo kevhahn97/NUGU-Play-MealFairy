@@ -27,7 +27,9 @@ class Response:
                 host=rds_host, user=name, passwd=password, db=db_name, 
                 charset='utf8', cursorclass=pymysql.cursors.DictCursor)
             cur = conn.cursor()
-            sql = """select food.food as food from food join food_ingredient on food.food = food_ingredient.food where replace(ingredient, ' ', '') = %s order by likes desc"""
+            sql = """select food.food as food from food
+            join food_ingredient on food.food = food_ingredient.food
+            where replace(ingredient, ' ', '') = %s order by likes desc limit 3"""
             cur.execute(sql, (p_ingredient, ))
             rows = cur.fetchall()
             food_list = []

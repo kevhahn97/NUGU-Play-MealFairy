@@ -27,13 +27,15 @@ class Response:
                 host=rds_host, user=name, passwd=password, db=db_name, 
                 charset='utf8', cursorclass=pymysql.cursors.DictCursor)
             cur = conn.cursor()
-            sql = """select type, COUNT(*) as type_count from food join food_type on food.food = food_type.food group by type"""
+            #sql = """select type, COUNT(*) as type_count from food join food_type on food.food = food_type.food group by type"""
+            sql = """select food from food order by likes desc limit 3"""
             cur.execute(sql)
             rows = cur.fetchall()
-            type_list = []
-            for types in rows:
-                type_list.append(types['type']  + ' ' + get_count(types['type_count']) + ' 가지')
-            res = '. '.join(type_list)
+            food_list = []
+            for row in rows:
+                food_list.append(row['food'])
+            food_list = '. '.join(food_list)
+            res = food_list
             self.set_parameters({
                 'SF_N_response': res
             })
